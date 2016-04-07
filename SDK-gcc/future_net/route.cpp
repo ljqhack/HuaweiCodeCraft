@@ -35,6 +35,37 @@ int Start=0, End=1;
 int MustNode[80]={2, 3};
 int MustLen = 2;
 
+int Color[601];
+
+
+/*************stack******************/
+typedef struct st{
+    int *base;
+    int *top;
+    int stackSize;	
+}mystack_t;
+
+mystack_t S;
+int STACK[601];
+void init_stack()
+{
+	memset(STACK, 0, sizeof(STACK));
+	S.base = STACK;
+	S.top = STACK;
+	S.stackSize = 601;
+}
+void push(int i)
+{
+	*S.top++ = i;
+}
+
+void pop()
+{
+	S.top--;
+}
+
+/************************************/
+
 int str_to_int(char *topo, int &lid, int &sid, int &did, int &cost)
 {
     int i = 0, j, num, ws;
@@ -148,6 +179,7 @@ void out_result(glp_prob *lp)
 	for(i = 1; i < num+1; i++)
 	{
 		result[i] = glp_get_col_prim(lp, i )>0.9 ? 1 : 0;
+		printf("glp_col[%d]=%lf", i, glp_get_col_prim(lp, i ));
 		printf("result[%d]=%d\n",i, result[i] );
 	}
 	l = G.node[Start].firstout;
@@ -405,7 +437,7 @@ void build_pro(glp_prob *lp)
 	ArcBox *l;
 	int ind[601] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
     double val[601] = {0};
-    double z,x1,x2,x3,x4,x5,x6,x7;
+    //double z,x1,x2,x3,x4,x5,x6,x7;
 	printf("\ngraph node num:%d\n", G.vexnum);
 	for(i = 0; i < MAX_NODE; i++)
 	{
@@ -524,7 +556,7 @@ void build_pro(glp_prob *lp)
 		}
 		
 	}
-	
+	/*
     memset(ind, 0, sizeof(ind));
     memset(val, 0, sizeof(val));
     ind[1] = 5;
@@ -534,20 +566,56 @@ void build_pro(glp_prob *lp)
     rowIndex = glp_add_rows(lp, 1);
 	glp_set_mat_row(lp, rowIndex, 2, ind, val);
     glp_set_row_bnds(lp, rowIndex, GLP_UP, 1.0, 1.0); 
-    
-    
-    glp_simplex(lp, NULL);
-    out_result(lp);
-    z = glp_get_obj_val(lp);
-    x1 = glp_get_col_prim(lp, 1);
-    x2 = glp_get_col_prim(lp, 2);
-    x3 = glp_get_col_prim(lp, 3);
-    x4 = glp_get_col_prim(lp, 4);
-    x5 = glp_get_col_prim(lp, 5);
-    x6 = glp_get_col_prim(lp, 6);
-    x7 = glp_get_col_prim(lp, 7);
-    printf("z=%lf\n", z);
-    printf("x=%lf,%lf,%lf,%lf,%lf,%lf,%lf\n", x1,x2,x3,x4,x5,x6,x7);
+    */
+}
+
+int gI;
+void DFS_Visit(ArcBox *arc, int *result, int start)
+{
+	ArcBox *l;
+	push(arc->tailvex);
+	Color[arc->mid] = 1;  //gray color
+	l = G.node[arc->headvex].firstout;
+	while(l)
+	{
+		if( result[l->mid] && (l->headvex == start) )
+		{
+			push(l->tailvex);
+			for(gI = 0; gI < (S.top - S.base); gI++)
+			{
+				printf("stack:%d \n", *(S.base+gI));
+			}
+		}
+		if( result[l->mid] && (Color[l->mid] == 0) )
+		{
+			DFS_Visit(l, result, start);
+		}
+		l = l->tlink;
+	}
+	pop();
+    Color[arc->mid] = 2;  //black color
+}
+
+void findCircle(int *result)
+{
+	memset(Color, 0, sizeof(Color));
+	init_stack();
+	DFS_Visit(SortLink[5], result, 2);
+}
+
+void check_result(glp_prob *lp)
+{
+	int num, i;
+	int result[601];
+	num = glp_get_num_cols(lp);
+	for(i = 1; i < num+1; i++)
+	{
+		result[i] = glp_get_col_prim(lp, i )>0.9 ? 1 : 0;
+		printf("glp_col[%d]=%lf ", i, glp_get_col_prim(lp, i ));
+		printf("result[%d]=%d\n",i, result[i] );
+	}
+	findCircle(result);
+	
 }
 
 //你要完成的功能总入口
@@ -576,6 +644,9 @@ void search_route(char *topo[5000], int edge_num, char *demand)
     glp_set_prob_name(lp, "mypro");
     glp_set_obj_dir(lp, GLP_MIN);
     build_pro(lp);
+    glp_simplex(lp, NULL);
+    check_result(lp);
+    out_result(lp);
     glp_delete_prob(lp);
     printf("\nend_search_route\n");
     //testFun();

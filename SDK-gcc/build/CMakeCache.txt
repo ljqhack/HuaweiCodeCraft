@@ -174,7 +174,7 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 MY_LIBRARY1:FILEPATH=MY_LIBRARY1-NOTFOUND
 
 //Path to a library.
-MY_LIBRARY2:FILEPATH=/usr/local/lib/libglpk.so
+MY_LIBRARY2:FILEPATH=/home/ljqhack/downloads/hua/SDK-gcc/future_net/libglpk.a
 
 //Value Computed by CMake
 future_net_BINARY_DIR:STATIC=/home/ljqhack/downloads/hua/SDK-gcc/build
