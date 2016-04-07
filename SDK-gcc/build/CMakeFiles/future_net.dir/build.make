@@ -131,6 +131,7 @@ future_net_EXTERNAL_OBJECTS =
 /home/ljqhack/downloads/hua/SDK-gcc/bin/future_net: CMakeFiles/future_net.dir/io.cpp.o
 /home/ljqhack/downloads/hua/SDK-gcc/bin/future_net: CMakeFiles/future_net.dir/route.cpp.o
 /home/ljqhack/downloads/hua/SDK-gcc/bin/future_net: CMakeFiles/future_net.dir/build.make
+/home/ljqhack/downloads/hua/SDK-gcc/bin/future_net: /usr/local/lib/libglpk.so
 /home/ljqhack/downloads/hua/SDK-gcc/bin/future_net: CMakeFiles/future_net.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable /home/ljqhack/downloads/hua/SDK-gcc/bin/future_net"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/future_net.dir/link.txt --verbose=$(VERBOSE)

@@ -18,6 +18,12 @@ stdio.h
 string.h
 /home/ljqhack/downloads/hua/SDK-gcc/future_net/string.h
 
+/home/ljqhack/downloads/hua/SDK-gcc/future_net/header/glpk.h
+stdarg.h
+-
+stddef.h
+-
+
 /home/ljqhack/downloads/hua/SDK-gcc/future_net/io.cpp
 stdio.h
 -
@@ -57,4 +63,6 @@ string.h
 -
 
 /home/ljqhack/downloads/hua/SDK-gcc/future_net/route.h
+glpk.h
+/home/ljqhack/downloads/hua/SDK-gcc/future_net/glpk.h
 
