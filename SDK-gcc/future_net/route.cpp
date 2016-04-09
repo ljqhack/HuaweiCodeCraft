@@ -32,15 +32,15 @@ ArcBox Link[MAX_LINK];
 ArcBox *SortLink[MAX_LINK];
 
 int Start=0, End=1;
-int MustNode[100]={2, 3};
-int MustLen = 2;
+int MustNode[300]={0};
+int MustLen = 0;
 
-int Color[1000];
+int Color[4000];
 
 /***********************************/
 typedef struct c{
-    int Circle[2001];
-    int indexCircle[200];
+    int Circle[8000];
+    int indexCircle[1000];
     int countCircle;
 }cir_t;
 cir_t fCircle;
@@ -70,13 +70,13 @@ typedef struct st{
 }mystack_t;
 
 mystack_t S;
-int STACK[2000];
+int STACK[5000];
 void init_stack()
 {
 	memset(STACK, 0, sizeof(STACK));
 	S.base = STACK;
 	S.top = STACK;
-	S.stackSize = 2000;
+	S.stackSize = 5000;
 }
 void push(int i)
 {
@@ -445,8 +445,8 @@ void build_pro(glp_prob *lp)
     int i = 0, j=0, rowIndex = 0;
     int mid = 0;
 	ArcBox *l;
-	int ind[601] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
-    double val[601] = {0};
+	int ind[1001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
+    double val[1001] = {0};
     //double z,x1,x2,x3,x4,x5,x6,x7;
 	printf("\ngraph node num:%d\n", G.vexnum);
 	for(i = 0; i < MAX_NODE; i++)
@@ -661,8 +661,8 @@ void check_result(glp_prob *lp, glp_iocp *iocp)
 {
 	int num, i, j, index;
 	int result[3001];
-	int ind[601] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
-    double val[601] = {0};
+	int ind[2001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
+    double val[2001] = {0};
     int rowIndex;
 	num = glp_get_num_cols(lp);
 	for(i = 1; i < num+1; i++)
@@ -741,7 +741,7 @@ void search_route(char *topo[5000], int edge_num, char *demand)
     for(i = 0; i < edge_num; i++)
     {
         str_to_int(topo[i], lid, sid, did, cost);
-        printf("read info from topo[%d]:%d  %d  %d  %d \n", i, lid, sid, did, cost);
+        //printf("read info from topo[%d]:%d  %d  %d  %d \n", i, lid, sid, did, cost);
         build_graph(lid, sid, did, cost);
     }
     demand_to_int(demand, &Start, &End, MustNode, &MustLen);
