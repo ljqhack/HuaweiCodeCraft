@@ -35,12 +35,12 @@ int Start=0, End=1;
 int MustNode[300]={0};
 int MustLen = 0;
 
-int Color[4000];
+int Color[5000];
 
 /***********************************/
 typedef struct c{
-    int Circle[8000];
-    int indexCircle[1000];
+    int Circle[10000];
+    int indexCircle[2000];
     int countCircle;
 }cir_t;
 cir_t fCircle;
@@ -70,13 +70,13 @@ typedef struct st{
 }mystack_t;
 
 mystack_t S;
-int STACK[5000];
+int STACK[8000];
 void init_stack()
 {
 	memset(STACK, 0, sizeof(STACK));
 	S.base = STACK;
 	S.top = STACK;
-	S.stackSize = 5000;
+	S.stackSize = 8000;
 }
 void push(int i)
 {
@@ -138,7 +138,7 @@ bool isMustNode(int id)
 
 void demand_to_int(char *demand, int *start, int *end, int mustnode[], int *mustlen)
 {
-	printf("demand:%s\n", demand);
+	//printf("demand:%s\n", demand);
 	char *base = demand;
 	int num = 0, ws, j, count = 0, flag=0;
 	while(((*demand) != '\0'))   //&& ((*demand) != '\r') 
@@ -168,17 +168,17 @@ void demand_to_int(char *demand, int *start, int *end, int mustnode[], int *must
 		    if(1 == count)
 		    {
 				*start = num;
-				printf("start: %d", *start);
+				//printf("start: %d", *start);
 			}
 			else if(2 == count)
 			{
 				*end = num;
-				printf("end: %d", *end);
+				//printf("end: %d", *end);
 			}
 			else
 			{
 				*(mustnode + count - 2 - 1) = num;
-				printf("must: %d", *(mustnode + count - 2 - 1));
+				//printf("must: %d", *(mustnode + count - 2 - 1));
 			}
 		}
 	}
@@ -218,7 +218,7 @@ void out_result(glp_prob *lp)
 		if(result[l->mid])
 		{
 		    record_result(l->id);
-		    printf("%d|", l->id);
+		    //printf("%d|", l->id);
 		    if(l->headvex == End)
 		        break;
 		    l = G.node[l->headvex].firstout;
@@ -445,8 +445,8 @@ void build_pro(glp_prob *lp)
     int i = 0, j=0, rowIndex = 0;
     int mid = 0;
 	ArcBox *l;
-	int ind[1001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
-    double val[1001] = {0};
+	int ind[3001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
+    double val[3001] = {0};
     //double z,x1,x2,x3,x4,x5,x6,x7;
 	printf("\ngraph node num:%d\n", G.vexnum);
 	for(i = 0; i < MAX_NODE; i++)
@@ -660,9 +660,9 @@ void debug_circle()
 void check_result(glp_prob *lp, glp_iocp *iocp)
 {
 	int num, i, j, index;
-	int result[3001];
-	int ind[2001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
-    double val[2001] = {0};
+	int result[4001];
+	int ind[3001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
+    double val[3001] = {0};
     int rowIndex;
 	num = glp_get_num_cols(lp);
 	for(i = 1; i < num+1; i++)
