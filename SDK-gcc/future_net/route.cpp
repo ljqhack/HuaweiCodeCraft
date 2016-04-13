@@ -35,12 +35,12 @@ int Start=0, End=1;
 int MustNode[300]={0};
 int MustLen = 0;
 
-int Color[5000];
+int Color[2000];
 
 /***********************************/
 typedef struct c{
-    int Circle[10000];
-    int indexCircle[2000];
+    int Circle[8000];
+    int indexCircle[500];
     int countCircle;
 }cir_t;
 cir_t fCircle;
@@ -70,13 +70,13 @@ typedef struct st{
 }mystack_t;
 
 mystack_t S;
-int STACK[8000];
+int STACK[15000];
 void init_stack()
 {
-	memset(STACK, 0, sizeof(STACK));
+	//memset(STACK, 0, sizeof(STACK));
 	S.base = STACK;
 	S.top = STACK;
-	S.stackSize = 8000;
+	S.stackSize = 15000;
 }
 void push(int i)
 {
@@ -138,7 +138,7 @@ bool isMustNode(int id)
 
 void demand_to_int(char *demand, int *start, int *end, int mustnode[], int *mustlen)
 {
-	//printf("demand:%s\n", demand);
+	printf("demand:%s\n", demand);
 	char *base = demand;
 	int num = 0, ws, j, count = 0, flag=0;
 	while(((*demand) != '\0'))   //&& ((*demand) != '\r') 
@@ -168,17 +168,17 @@ void demand_to_int(char *demand, int *start, int *end, int mustnode[], int *must
 		    if(1 == count)
 		    {
 				*start = num;
-				//printf("start: %d", *start);
+				printf("start: %d ", *start);
 			}
 			else if(2 == count)
 			{
 				*end = num;
-				//printf("end: %d", *end);
+				printf("end: %d ", *end);
 			}
 			else
 			{
 				*(mustnode + count - 2 - 1) = num;
-				//printf("must: %d", *(mustnode + count - 2 - 1));
+			    printf("must: %d ", *(mustnode + count - 2 - 1));
 			}
 		}
 	}
@@ -194,7 +194,7 @@ void demand_to_int(char *demand, int *start, int *end, int mustnode[], int *must
     */
     num = atoi(base);
 	*(mustnode + count - 2 - 1) = num;
-	printf("must: %d", *(mustnode + count - 2 - 1));
+	printf("must: %d ", *(mustnode + count - 2 - 1));
 	*mustlen = count - 2;
 }
 
@@ -204,6 +204,7 @@ void out_result(glp_prob *lp)
 	int num, i;
 	ArcBox *l;
 	int result[4001];
+	int weight = 0;
 	memset(result, 0, sizeof(result));
 	num = glp_get_num_cols(lp);
 	for(i = 1; i < num+1; i++)
@@ -218,7 +219,8 @@ void out_result(glp_prob *lp)
 		if(result[l->mid])
 		{
 		    record_result(l->id);
-		    //printf("%d|", l->id);
+		    printf("%d|", l->id);
+		    weight += l->cost;
 		    if(l->headvex == End)
 		        break;
 		    l = G.node[l->headvex].firstout;
@@ -226,7 +228,8 @@ void out_result(glp_prob *lp)
 		}
 		l = l->tlink;
 	} 
-	printf("end");
+	printf("end ");
+	printf("cost: %d", weight);
 }
 
 
@@ -660,9 +663,9 @@ void debug_circle()
 void check_result(glp_prob *lp, glp_iocp *iocp)
 {
 	int num, i, j, index;
-	int result[4001];
-	int ind[3001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
-    double val[3001] = {0};
+	int result[3001];
+	int ind[2001] = {0};        //赛题规定每个顶点的出度不超过8,最多有600个顶点
+    double val[2001] = {0};
     int rowIndex;
 	num = glp_get_num_cols(lp);
 	for(i = 1; i < num+1; i++)
@@ -699,13 +702,20 @@ void check_result(glp_prob *lp, glp_iocp *iocp)
 	    glp_intopt(lp, iocp);
 	    //glp_simplex(lp, NULL);
 	    num = glp_get_num_cols(lp);
+	    //printf("result:");
 	    for(i = 1; i < num+1; i++)
 	    {
 		    result[i] = glp_mip_col_val(lp, i )>0.9 ? 1 : 0;
 		    //printf("glp_col[%d]=%lf ", i, glp_get_col_prim(lp, i ));
 		    //printf("result[%d]=%d\n",i, result[i] );
+		    //if(result[i])
+		    //{
+		    //printf("%d*", i);
+		    //}
 	    }
-	    memset(&fCircle, 0, sizeof(fCircle));
+	    //printf("\n");
+	    //memset(&fCircle, 0, sizeof(fCircle));
+	    fCircle.countCircle = 0;
 	    findCircle(result, num);
         //debug_circle();
 	}

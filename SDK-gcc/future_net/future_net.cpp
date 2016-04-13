@@ -28,12 +28,6 @@ int main(int argc, char *argv[])
         printf("Please input valid topo file.\n");
         return -1;
     }
-    printf("edge_num:%d\n", edge_num);
-    int i = 0;
-    while(i < edge_num)
-    {
-        printf("topo0:%s\n",topo[i++]);
-    }
     char *demand_file = argv[2];
     //const char *demand_file = DF;
     demand_num = read_file(&demand, 1, demand_file);
